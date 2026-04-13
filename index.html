@@ -29,13 +29,13 @@
   .title { font-size: 22px; font-weight: 700; line-height: 1.2; }
   .title span { color: var(--blue); }
   .sub { font-size: 12px; color: var(--muted); margin-top: 3px; font-weight: 300; }
-  .subscribe-btn { display: inline-flex; align-items: center; gap: 6px; background: #1A1A18; color: #fff; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 400; padding: 5px 12px 5px 10px; border-radius: 100px; border: none; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
+  .subscribe-btn { display: inline-flex; align-items: center; gap: 6px; background: #1A1A18; color: #fff; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 400; padding: 5px 12px 5px 8px; border-radius: 100px; border: none; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; line-height: 1; height: 32px; box-sizing: border-box; }
   .subscribe-btn:hover { opacity: 0.78; }
 
   .legend { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.25rem; }
   .legend-item { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px 5px 8px; font-size: 12px; color: var(--muted); }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .legend-item { cursor: pointer; transition: opacity 0.15s; user-select: none; }
+  .legend-item { cursor: pointer; transition: opacity 0.15s; user-select: none; height: 32px; box-sizing: border-box; }
   .legend-item.inactive { opacity: 0.3; }
   .filter-reset { display: none; align-items: center; font-size: 12px; color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; white-space: nowrap; }
   .filter-reset.show { display: flex; }
@@ -376,12 +376,14 @@ function isVisible(ev) {
   return Array.from(activeTags).some(tag => title.startsWith(tag));
 }
 
-function updateLastUpdated() {
+function updateLastUpdated(calUpdated) {
   const el = document.getElementById('last-updated');
   if (!el) return;
-  const now = new Date();
-  const h = pad(now.getHours()), m = pad(now.getMinutes()), s = pad(now.getSeconds());
-  el.textContent = `마지막 업데이트 ${now.getMonth()+1}/${now.getDate()} ${h}:${m}:${s}`;
+  const d = calUpdated ? new Date(calUpdated) : new Date();
+  const month = d.getMonth() + 1;
+  const date = d.getDate();
+  const h = pad(d.getHours()), m = pad(d.getMinutes());
+  el.textContent = `마지막 업데이트 ${month}/${date} ${h}:${m}`;
 }
 
 async function fetchEvents() {
@@ -394,7 +396,12 @@ async function fetchEvents() {
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
     allEvents = data.items || [];
-    updateLastUpdated();
+    // data.updated = 캘린더 전체의 마지막 수정 시간
+    // 없으면 이벤트 중 가장 최근 updated로 fallback
+    const calUpdated = data.updated || (allEvents.length
+      ? allEvents.reduce((a, b) => (a.updated > b.updated ? a : b)).updated
+      : null);
+    updateLastUpdated(calUpdated);
     render();
   } catch(e) {
     document.getElementById('cal-wrap').innerHTML = `<div class="state-msg">일정을 불러올 수 없습니다<br><small>${e.message}</small></div>`;
