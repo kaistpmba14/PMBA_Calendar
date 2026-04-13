@@ -58,7 +58,7 @@
   .day-num { font-size: 11px; color: var(--muted); margin-bottom: 3px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
   .day-num.today { background: var(--blue); color: #fff; font-weight: 500; }
   .day-num.other { color: #C5C3BB; }
-  .event-chip { font-size: clamp(10px, 0.85vw, 13px); padding: clamp(2px, 0.2vw, 4px) clamp(4px, 0.4vw, 7px); border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; line-height: 1.4; }
+  .event-chip { font-size: clamp(11px, 1.1vw, 15px); padding: clamp(2px, 0.25vw, 5px) clamp(4px, 0.5vw, 8px); border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; line-height: 1.4; }
   .event-chip:hover { opacity: 0.75; }
   .more-chip { font-size: 10px; color: var(--muted); padding: 1px 4px; cursor: pointer; }
 
@@ -102,7 +102,7 @@
     .header { flex-direction: column; align-items: flex-start; }
     .header-right { justify-content: flex-start; flex-wrap: wrap; }
     .title { font-size: 19px; }
-    .event-chip { font-size: 9px !important; padding: 1px 3px !important; }
+    .event-chip { padding: 1px 3px; }
     .cal-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 16px; margin-left: -1rem; margin-right: -1rem; padding-left: 1rem; padding-right: 1rem; }
     .cal-wrap { width: 686px; min-width: 686px; border-radius: 16px; }
     .days-grid { grid-auto-rows: minmax(72px, auto) !important; grid-template-columns: repeat(7, 98px) !important; }
@@ -174,7 +174,7 @@
 const API_KEY = 'AIzaSyCllmHnJx8M-oaKjEzcxriUlNPlDGcQ-FI';
 const CAL_ID = 'kaist.pmba.14@gmail.com';
 const ICAL_URL = 'https://calendar.google.com/calendar/ical/kaist.pmba.14%40gmail.com/public/basic.ics';
-const DOW = ['일','월','화','수','목','금','토'];
+const DOW = ['월','화','수','목','금','토','일'];
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
 // COLOR_MAP: colorId -> { color, bg, label }
@@ -203,10 +203,12 @@ function pad(n) { return String(n).padStart(2, '0'); }
 function formatDateTime(ev) {
   if (ev.start.date) {
     const d = new Date(ev.start.date + 'T00:00:00');
-    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${DOW[d.getDay()]}) · 종일`;
+    const dowFull2 = ['일','월','화','수','목','금','토'];
+    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${dowFull2[d.getDay()]}) · 종일`;
   }
   const s = new Date(ev.start.dateTime), e = new Date(ev.end.dateTime);
-  return `${s.getMonth()+1}월 ${s.getDate()}일 (${DOW[s.getDay()]}) ${pad(s.getHours())}:${pad(s.getMinutes())} ~ ${pad(e.getHours())}:${pad(e.getMinutes())}`;
+  const DAYS = ['일','월','화','수','목','금','토'];
+  return `${s.getMonth()+1}월 ${s.getDate()}일 (${DAYS[s.getDay()]}) ${pad(s.getHours())}:${pad(s.getMinutes())} ~ ${pad(e.getHours())}:${pad(e.getMinutes())}`;
 }
 
 function showDetail(id) {
@@ -242,7 +244,8 @@ function getEventsForDate(y, m, d) {
 function renderMonth() {
   const y = currentDate.getFullYear(), m = currentDate.getMonth();
   document.getElementById('month-label').textContent = `${y}년 ${MONTHS[m]}`;
-  const firstDay = new Date(y, m, 1).getDay();
+  const rawDay = new Date(y, m, 1).getDay();
+  const firstDay = rawDay === 0 ? 6 : rawDay - 1;
   const lastDate = new Date(y, m+1, 0).getDate();
   const prevLast = new Date(y, m, 0).getDate();
   const today = new Date();
@@ -294,9 +297,11 @@ function renderList() {
     const ci = getCI(ev);
     const startRaw = ev.start.date || ev.start.dateTime;
     const d = new Date(ev.start.date ? startRaw + 'T00:00:00' : startRaw);
+    const dowFull3 = ['일','월','화','수','목','금','토'];
+    const LDAYS = ['일','월','화','수','목','금','토'];
     const timeStr = ev.start.date ? '종일' : `${pad(d.getHours())}:${pad(d.getMinutes())}`;
     html += `<div class="list-item" onclick="showDetail('${ev.id}')">
-      <div class="list-date"><div class="list-date-day">${d.getDate()}</div><div class="list-date-dow">${DOW[d.getDay()]}</div></div>
+      <div class="list-date"><div class="list-date-day">${d.getDate()}</div><div class="list-date-dow">${dowFull3[d.getDay()]}</div></div>
       <div class="list-dot" style="background:${ci.color}"></div>
       <div class="list-info">
         <div class="list-title">${ev.summary || '(제목 없음)'}</div>
