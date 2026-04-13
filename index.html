@@ -233,7 +233,7 @@ function renderMonth() {
       const evs = getEventsForDate(y, m, d);
       evs.slice(0, 2).forEach(ev => {
         const ci = getCI(ev);
-        const t = (ev.summary || '일정').slice(0, 9);
+        const t = ev.summary || '일정';
         html += `<div class="event-chip" style="background:${ci.bg};color:${ci.color}" onclick="showDetail('${ev.id}')">${t}</div>`;
       });
       if (evs.length > 2) html += `<div class="more-chip">+${evs.length - 2}개 더</div>`;
