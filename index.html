@@ -18,7 +18,8 @@
   }
   html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; }
   .page { max-width: 1400px; margin: 0 auto; padding: 2rem 2.5rem 4rem; }
-  @media (min-width: 1024px) { .day-cell { min-height: 120px; } }
+  .days-grid { grid-auto-rows: minmax(calc((100vw - 5rem) / 7 * 0.85), auto); }
+  @media (min-width: 1400px) { .days-grid { grid-auto-rows: minmax(140px, auto); } }
 
   .header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem; }
   .school-tag { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
@@ -94,8 +95,10 @@
     .title { font-size: 19px; }
     .event-chip { font-size: 9px; padding: 1px 3px; }
     .cal-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 16px; }
-    .cal-wrap { min-width: 560px; }
-    .day-cell { min-height: 70px; padding: 4px 3px; }
+    .cal-wrap { width: 700px; border-radius: 16px; }
+    .days-grid { grid-auto-rows: minmax(72px, auto) !important; grid-template-columns: repeat(7, 100px) !important; }
+    .day-headers { grid-template-columns: repeat(7, 100px) !important; }
+    .day-cell { min-height: 72px; padding: 4px 3px; }
   }
 </style>
 </head>
@@ -120,7 +123,6 @@
     <div class="legend-item"><div class="legend-dot" style="background:#2D6A2D"></div>세미나</div>
     <div class="legend-item"><div class="legend-dot" style="background:#4A4A4A"></div>총학생회</div>
     <div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div>학사일정</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#185FA5"></div>네트워킹</div>
   </div>
 
   <div class="cal-nav">
@@ -173,7 +175,6 @@ const TAG_MAP = [
   { tag: '[세미나]', color: '#2D6A2D', bg: '#E6F4E6', label: '세미나' },
   { tag: '[총학]',   color: '#4A4A4A', bg: '#EFEFEF', label: '총학생회' },
   { tag: '[학사]',   color: '#534AB7', bg: '#EEEDFE', label: '학사일정' },
-  { tag: '[네트워킹]', color: '#185FA5', bg: '#E6F1FB', label: '네트워킹' },
 ];
 const DEFAULT_CI = { color: '#888', bg: '#F5F5F5', label: '일정' };
 
