@@ -80,12 +80,22 @@
   .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text); color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 100px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; font-family: 'Noto Sans KR', sans-serif; z-index: 999; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  @media (max-width: 600px) {
+
     .page { padding: 1.25rem 1rem 3rem; }
     .header { flex-direction: column; align-items: flex-start; }
     .title { font-size: 19px; }
     .day-cell { min-height: 60px; padding: 4px 2px; }
     .event-chip { font-size: 9px; padding: 1px 3px; }
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 1.25rem 1rem 3rem; }
+    .header { flex-direction: column; align-items: flex-start; }
+    .title { font-size: 19px; }
+    .event-chip { font-size: 9px; padding: 1px 3px; }
+    .cal-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 16px; }
+    .cal-wrap { min-width: 560px; }
+    .day-cell { min-height: 70px; padding: 4px 3px; }
   }
 </style>
 </head>
@@ -104,11 +114,12 @@
   </div>
 
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>전체모임 / 총회</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>학술 세미나</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>친목 / MT</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>마감 / 제출</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>외부 행사</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7A3F9D"></div>연합모임</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#C0392B"></div>기수모임</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#BA7517"></div>소모임</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2D6A2D"></div>세미나</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4A4A4A"></div>총학생회</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div>학사일정</div>
   </div>
 
   <div class="cal-nav">
@@ -123,8 +134,10 @@
     </div>
   </div>
 
-  <div class="cal-wrap" id="cal-wrap">
-    <div class="state-msg">일정을 불러오는 중...</div>
+  <div class="cal-scroll-wrap">
+    <div class="cal-wrap" id="cal-wrap">
+      <div class="state-msg">일정을 불러오는 중...</div>
+    </div>
   </div>
 
   <div class="detail-panel" id="detail-panel">
@@ -153,12 +166,13 @@ const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','
 // COLOR_MAP: colorId -> { color, bg, label }
 // 구글 캘린더 colorId 확정 후 업데이트 예정
 const COLOR_MAP = {
-  '11': { color: '#D85A30', bg: '#FAECE7', label: '전체모임 / 총회' },
-  '9':  { color: '#185FA5', bg: '#E6F1FB', label: '학술 세미나' },
-  '2':  { color: '#3B6D11', bg: '#EAF3DE', label: '친목 / MT' },
-  '5':  { color: '#BA7517', bg: '#FAEEDA', label: '마감 / 제출' },
-  '1':  { color: '#534AB7', bg: '#EEEDFE', label: '외부 행사' },
-  'default': { color: '#185FA5', bg: '#E6F1FB', label: '일정' }
+  '3':  { color: '#7A3F9D', bg: '#F3E8FB', label: '연합모임' },
+  '11': { color: '#C0392B', bg: '#FDECEA', label: '기수모임' },
+  '5':  { color: '#BA7517', bg: '#FAEEDA', label: '소모임' },
+  '8':  { color: '#2D6A2D', bg: '#E6F4E6', label: '세미나' },
+  '7':  { color: '#4A4A4A', bg: '#EFEFEF', label: '총학생회' },
+  '1':  { color: '#534AB7', bg: '#EEEDFE', label: '학사일정' },
+  'default': { color: '#888', bg: '#F5F5F5', label: '일정' }
 };
 
 let currentDate = new Date();
