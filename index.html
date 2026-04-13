@@ -17,7 +17,8 @@
     --text: #1A1A18; --muted: #6B6B67; --border: #E2E0D8;
   }
   html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; }
-  .page { max-width: 860px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  .page { max-width: 1400px; margin: 0 auto; padding: 2rem 2.5rem 4rem; }
+  @media (min-width: 1024px) { .day-cell { min-height: 120px; } }
 
   .header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem; }
   .school-tag { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
@@ -80,6 +81,7 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   @media (max-width: 600px) {
+    .page { padding: 1.25rem 1rem 3rem; }
     .header { flex-direction: column; align-items: flex-start; }
     .title { font-size: 19px; }
     .day-cell { min-height: 60px; padding: 4px 2px; }
@@ -148,6 +150,8 @@ const ICAL_URL = 'https://calendar.google.com/calendar/ical/kaist.pmba.14%40gmai
 const DOW = ['일','월','화','수','목','금','토'];
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
+// COLOR_MAP: colorId -> { color, bg, label }
+// 구글 캘린더 colorId 확정 후 업데이트 예정
 const COLOR_MAP = {
   '11': { color: '#D85A30', bg: '#FAECE7', label: '전체모임 / 총회' },
   '9':  { color: '#185FA5', bg: '#E6F1FB', label: '학술 세미나' },
@@ -164,7 +168,6 @@ let view = 'month';
 function getCI(ev) {
   return (ev.colorId && COLOR_MAP[ev.colorId]) ? COLOR_MAP[ev.colorId] : COLOR_MAP['default'];
 }
-
 function pad(n) { return String(n).padStart(2, '0'); }
 
 function formatDateTime(ev) {
