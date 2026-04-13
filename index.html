@@ -21,7 +21,10 @@
   .days-grid { grid-auto-rows: minmax(calc((100vw - 5rem) / 7 * 0.85), auto); }
   @media (min-width: 1400px) { .days-grid { grid-auto-rows: minmax(140px, auto); } }
 
-  .header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem; }
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
+  .header-left {}
+  .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; justify-content: flex-end; }
+  .last-updated { font-size: 11px; color: var(--muted); font-weight: 300; white-space: nowrap; }
   .school-tag { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
   .title { font-size: 22px; font-weight: 700; line-height: 1.2; }
   .title span { color: var(--blue); }
@@ -32,6 +35,12 @@
   .legend { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.25rem; }
   .legend-item { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px 5px 8px; font-size: 12px; color: var(--muted); }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend-item { cursor: pointer; transition: opacity 0.15s; user-select: none; }
+  .legend-item.inactive { opacity: 0.3; }
+  .filter-reset { display: none; align-items: center; font-size: 12px; color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; white-space: nowrap; }
+  .filter-reset.show { display: flex; }
+  .filter-reset:hover { background: var(--border); }
+  .legend-wrap { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-bottom: 1.25rem; }
 
   .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
   .nav-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 16px; cursor: pointer; color: var(--text); }
@@ -49,7 +58,7 @@
   .day-num { font-size: 11px; color: var(--muted); margin-bottom: 3px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
   .day-num.today { background: var(--blue); color: #fff; font-weight: 500; }
   .day-num.other { color: #C5C3BB; }
-  .event-chip { font-size: 10px; padding: 2px 5px; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; line-height: 1.4; }
+  .event-chip { font-size: clamp(10px, 0.85vw, 13px); padding: clamp(2px, 0.2vw, 4px) clamp(4px, 0.4vw, 7px); border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; line-height: 1.4; }
   .event-chip:hover { opacity: 0.75; }
   .more-chip { font-size: 10px; color: var(--muted); padding: 1px 4px; cursor: pointer; }
 
@@ -75,8 +84,7 @@
 
   .state-msg { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
 
-  .footer { margin-top: 1.25rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
-  .footer-note { font-size: 12px; color: var(--muted); font-weight: 300; }
+
 
   .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text); color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 100px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; font-family: 'Noto Sans KR', sans-serif; z-index: 999; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -92,12 +100,13 @@
   @media (max-width: 600px) {
     .page { padding: 1.25rem 1rem 3rem; }
     .header { flex-direction: column; align-items: flex-start; }
+    .header-right { justify-content: flex-start; }
     .title { font-size: 19px; }
     .event-chip { font-size: 9px; padding: 1px 3px; }
-    .cal-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 16px; }
-    .cal-wrap { width: 700px; border-radius: 16px; }
-    .days-grid { grid-auto-rows: minmax(72px, auto) !important; grid-template-columns: repeat(7, 100px) !important; }
-    .day-headers { grid-template-columns: repeat(7, 100px) !important; }
+    .cal-scroll-wrap { overflow-x: scroll; -webkit-overflow-scrolling: touch; border-radius: 16px; display: block; width: 100%; }
+    .cal-wrap { width: 700px !important; min-width: 700px !important; border-radius: 16px; }
+    .days-grid { grid-auto-rows: minmax(72px, auto) !important; grid-template-columns: repeat(7, 100px) !important; width: 700px !important; }
+    .day-headers { grid-template-columns: repeat(7, 100px) !important; width: 700px !important; }
     .day-cell { min-height: 72px; padding: 4px 3px; }
   }
 </style>
@@ -105,24 +114,29 @@
 <body>
 <div class="page">
   <div class="header">
-    <div>
+    <div class="header-left">
       <div class="school-tag">KAIST College of Business</div>
-      <div class="title">PMBA <span>14기</span> 원우회</div>
-      <div class="sub">공식 일정 캘린더 · 집행부 실시간 업데이트</div>
+      <div class="title">PMBA <span>14기</span> 캘린더</div>
     </div>
-    <button class="subscribe-btn" id="sub-btn">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="2" stroke="white" stroke-width="1.2"/><path d="M1 5h12" stroke="white" stroke-width="1.2"/><path d="M4 1v2M10 1v2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
-      내 캘린더에 구독
-    </button>
+    <div class="header-right">
+      <div class="last-updated" id="last-updated"></div>
+      <button class="subscribe-btn" id="sub-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="2" stroke="white" stroke-width="1.2"/><path d="M1 5h12" stroke="white" stroke-width="1.2"/><path d="M4 1v2M10 1v2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+        내 캘린더에 구독
+      </button>
+    </div>
   </div>
 
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#7A3F9D"></div>연합모임</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#C0392B"></div>기수모임</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#BA7517"></div>소모임</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#2D6A2D"></div>세미나</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#4A4A4A"></div>총학생회</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div>학사일정</div>
+  <div class="legend-wrap">
+    <div class="legend legend-filters" id="legend-filters">
+      <div class="legend-item" data-tag="[연합]"><div class="legend-dot" style="background:#7A3F9D"></div>연합모임</div>
+      <div class="legend-item" data-tag="[기수]"><div class="legend-dot" style="background:#C0392B"></div>기수모임</div>
+      <div class="legend-item" data-tag="[소모임]"><div class="legend-dot" style="background:#BA7517"></div>소모임</div>
+      <div class="legend-item" data-tag="[세미나]"><div class="legend-dot" style="background:#2D6A2D"></div>세미나</div>
+      <div class="legend-item" data-tag="[총학]"><div class="legend-dot" style="background:#4A4A4A"></div>총학생회</div>
+      <div class="legend-item" data-tag="[학사]"><div class="legend-dot" style="background:#534AB7"></div>학사일정</div>
+    </div>
+    <button class="filter-reset" id="filter-reset" onclick="resetFilter()">전체 보기</button>
   </div>
 
   <div class="cal-nav">
@@ -152,10 +166,7 @@
     <div class="detail-meta" id="d-meta"></div>
   </div>
 
-  <div class="footer">
-    <div class="footer-note">일정 문의 · <strong>원우회 집행부</strong></div>
-    <div class="footer-note">구독 시 일정 변경사항 자동 반영</div>
-  </div>
+
 </div>
 <div class="toast" id="toast"></div>
 
@@ -249,7 +260,7 @@ function renderMonth() {
     html += '<div class="day-cell">';
     html += `<div class="day-num${isToday ? ' today' : ''}${!cur ? ' other' : ''}">${d}</div>`;
     if (cur) {
-      const evs = getEventsForDate(y, m, d);
+      const evs = getEventsForDate(y, m, d).filter(isVisible);
       evs.slice(0, 2).forEach(ev => {
         const ci = getCI(ev);
         const t = ev.summary || '일정';
@@ -270,7 +281,7 @@ function renderList() {
   const me = `${y}-${pad(m+1)}-${pad(new Date(y,m+1,0).getDate())}`;
   const evs = allEvents.filter(ev => {
     const s = (ev.start.date || ev.start.dateTime || '').slice(0,10);
-    return s >= ms && s <= me;
+    return s >= ms && s <= me && isVisible(ev);
   });
 
   if (!evs.length) {
@@ -324,6 +335,55 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
+// 필터 상태
+let activeTags = new Set(); // 비어있으면 전체 표시
+
+function initFilter() {
+  document.querySelectorAll('#legend-filters .legend-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const tag = el.dataset.tag;
+      if (activeTags.has(tag)) {
+        activeTags.delete(tag);
+        el.classList.remove('inactive');
+        // 모두 해제되면 전체 보기로
+        if (activeTags.size === 0) {
+          document.querySelectorAll('#legend-filters .legend-item').forEach(e => e.classList.remove('inactive'));
+        }
+      } else {
+        activeTags.add(tag);
+        // 활성화된 것만 밝게, 나머지 흐리게
+        document.querySelectorAll('#legend-filters .legend-item').forEach(e => {
+          e.classList.toggle('inactive', !activeTags.has(e.dataset.tag));
+        });
+      }
+      const resetBtn = document.getElementById('filter-reset');
+      resetBtn.classList.toggle('show', activeTags.size > 0);
+      render();
+    });
+  });
+}
+
+function resetFilter() {
+  activeTags.clear();
+  document.querySelectorAll('#legend-filters .legend-item').forEach(e => e.classList.remove('inactive'));
+  document.getElementById('filter-reset').classList.remove('show');
+  render();
+}
+
+function isVisible(ev) {
+  if (activeTags.size === 0) return true;
+  const title = ev.summary || '';
+  return Array.from(activeTags).some(tag => title.startsWith(tag));
+}
+
+function updateLastUpdated() {
+  const el = document.getElementById('last-updated');
+  if (!el) return;
+  const now = new Date();
+  const h = pad(now.getHours()), m = pad(now.getMinutes()), s = pad(now.getSeconds());
+  el.textContent = `마지막 업데이트 ${now.getMonth()+1}/${now.getDate()} ${h}:${m}:${s}`;
+}
+
 async function fetchEvents() {
   const now = new Date();
   const tMin = new Date(now.getFullYear(), now.getMonth()-1, 1).toISOString();
@@ -334,12 +394,14 @@ async function fetchEvents() {
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
     allEvents = data.items || [];
+    updateLastUpdated();
     render();
   } catch(e) {
     document.getElementById('cal-wrap').innerHTML = `<div class="state-msg">일정을 불러올 수 없습니다<br><small>${e.message}</small></div>`;
   }
 }
 
+initFilter();
 fetchEvents();
 </script>
 </body>
