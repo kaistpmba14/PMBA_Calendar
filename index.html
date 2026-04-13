@@ -120,6 +120,7 @@
     <div class="legend-item"><div class="legend-dot" style="background:#2D6A2D"></div>세미나</div>
     <div class="legend-item"><div class="legend-dot" style="background:#4A4A4A"></div>총학생회</div>
     <div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div>학사일정</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#185FA5"></div>네트워킹</div>
   </div>
 
   <div class="cal-nav">
@@ -165,22 +166,25 @@ const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','
 
 // COLOR_MAP: colorId -> { color, bg, label }
 // 구글 캘린더 colorId 확정 후 업데이트 예정
-const COLOR_MAP = {
-  '3':  { color: '#7A3F9D', bg: '#F3E8FB', label: '연합모임' },
-  '11': { color: '#C0392B', bg: '#FDECEA', label: '기수모임' },
-  '5':  { color: '#BA7517', bg: '#FAEEDA', label: '소모임' },
-  '8':  { color: '#2D6A2D', bg: '#E6F4E6', label: '세미나' },
-  '7':  { color: '#4A4A4A', bg: '#EFEFEF', label: '총학생회' },
-  '1':  { color: '#534AB7', bg: '#EEEDFE', label: '학사일정' },
-  'default': { color: '#888', bg: '#F5F5F5', label: '일정' }
-};
+const TAG_MAP = [
+  { tag: '[연합]',   color: '#7A3F9D', bg: '#F3E8FB', label: '연합모임' },
+  { tag: '[기수]',   color: '#C0392B', bg: '#FDECEA', label: '기수모임' },
+  { tag: '[소모임]', color: '#BA7517', bg: '#FAEEDA', label: '소모임' },
+  { tag: '[세미나]', color: '#2D6A2D', bg: '#E6F4E6', label: '세미나' },
+  { tag: '[총학]',   color: '#4A4A4A', bg: '#EFEFEF', label: '총학생회' },
+  { tag: '[학사]',   color: '#534AB7', bg: '#EEEDFE', label: '학사일정' },
+  { tag: '[네트워킹]', color: '#185FA5', bg: '#E6F1FB', label: '네트워킹' },
+];
+const DEFAULT_CI = { color: '#888', bg: '#F5F5F5', label: '일정' };
 
 let currentDate = new Date();
 let allEvents = [];
 let view = 'month';
 
 function getCI(ev) {
-  return (ev.colorId && COLOR_MAP[ev.colorId]) ? COLOR_MAP[ev.colorId] : COLOR_MAP['default'];
+  const title = ev.summary || '';
+  const match = TAG_MAP.find(t => title.startsWith(t.tag));
+  return match || DEFAULT_CI;
 }
 function pad(n) { return String(n).padStart(2, '0'); }
 
