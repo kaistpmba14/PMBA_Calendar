@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIST PMBA 14기 원우회 일정</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #D85A30; --red-bg: #FAECE7;
+    --blue: #185FA5; --blue-bg: #E6F1FB;
+    --green: #3B6D11; --green-bg: #EAF3DE;
+    --amber: #BA7517; --amber-bg: #FAEEDA;
+    --purple: #534AB7; --purple-bg: #EEEDFE;
+    --bg: #F7F6F2; --surface: #FFFFFF;
+    --text: #1A1A18; --muted: #6B6B67; --border: #E2E0D8;
+  }
+  html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; }
+  .page { max-width: 860px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  .header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem; }
+  .school-tag { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .title { font-size: 22px; font-weight: 700; line-height: 1.2; }
+  .title span { color: var(--blue); }
+  .sub { font-size: 12px; color: var(--muted); margin-top: 3px; font-weight: 300; }
+  .subscribe-btn { display: inline-flex; align-items: center; gap: 7px; background: var(--text); color: #fff; font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 500; padding: 10px 18px; border-radius: 100px; border: none; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
+  .subscribe-btn:hover { opacity: 0.78; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.25rem; }
+  .legend-item { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px 5px 8px; font-size: 12px; color: var(--muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .nav-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 16px; cursor: pointer; color: var(--text); }
+  .nav-btn:hover { background: var(--border); }
+  .month-label { font-size: 17px; font-weight: 500; }
+  .view-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-size: 12px; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; color: var(--muted); }
+  .view-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+  .cal-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .day-headers { display: grid; grid-template-columns: repeat(7, 1fr); background: #F7F6F2; border-bottom: 1px solid var(--border); }
+  .day-header { text-align: center; font-size: 11px; color: var(--muted); padding: 8px 0; font-weight: 500; }
+  .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+  .day-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 80px; padding: 6px 4px; }
+  .day-cell:nth-child(7n) { border-right: none; }
+  .day-num { font-size: 11px; color: var(--muted); margin-bottom: 3px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+  .day-num.today { background: var(--blue); color: #fff; font-weight: 500; }
+  .day-num.other { color: #C5C3BB; }
+  .event-chip { font-size: 10px; padding: 2px 5px; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; line-height: 1.4; }
+  .event-chip:hover { opacity: 0.75; }
+  .more-chip { font-size: 10px; color: var(--muted); padding: 1px 4px; cursor: pointer; }
+
+  .list-view { padding: 1rem; }
+  .list-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .list-item:last-child { border-bottom: none; }
+  .list-item:hover { opacity: 0.75; }
+  .list-date { flex-shrink: 0; width: 36px; text-align: center; }
+  .list-date-day { font-size: 18px; font-weight: 700; line-height: 1; }
+  .list-date-dow { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .list-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .list-info { flex: 1; }
+  .list-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .list-meta { font-size: 12px; color: var(--muted); }
+
+  .detail-panel { margin-top: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; display: none; }
+  .detail-panel.show { display: block; }
+  .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .detail-type { font-size: 11px; font-weight: 500; }
+  .detail-close { background: none; border: none; font-size: 16px; cursor: pointer; color: var(--muted); }
+  .detail-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+  .detail-meta { font-size: 13px; color: var(--muted); line-height: 1.8; white-space: pre-line; }
+
+  .state-msg { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
+
+  .footer { margin-top: 1.25rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .footer-note { font-size: 12px; color: var(--muted); font-weight: 300; }
+
+  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text); color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 100px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; font-family: 'Noto Sans KR', sans-serif; z-index: 999; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 600px) {
+    .header { flex-direction: column; align-items: flex-start; }
+    .title { font-size: 19px; }
+    .day-cell { min-height: 60px; padding: 4px 2px; }
+    .event-chip { font-size: 9px; padding: 1px 3px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="school-tag">KAIST College of Business</div>
+      <div class="title">PMBA <span>14기</span> 원우회</div>
+      <div class="sub">공식 일정 캘린더 · 집행부 실시간 업데이트</div>
+    </div>
+    <button class="subscribe-btn" id="sub-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="2" stroke="white" stroke-width="1.2"/><path d="M1 5h12" stroke="white" stroke-width="1.2"/><path d="M4 1v2M10 1v2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+      내 캘린더에 구독
+    </button>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>전체모임 / 총회</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>학술 세미나</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>친목 / MT</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>마감 / 제출</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>외부 행사</div>
+  </div>
+
+  <div class="cal-nav">
+    <button class="nav-btn" id="prev-btn">&#8249;</button>
+    <span class="month-label" id="month-label"></span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="display:flex;gap:4px;">
+        <button class="view-btn active" id="btn-month" onclick="setView('month')">월</button>
+        <button class="view-btn" id="btn-list" onclick="setView('list')">목록</button>
+      </div>
+      <button class="nav-btn" id="next-btn">&#8250;</button>
+    </div>
+  </div>
+
+  <div class="cal-wrap" id="cal-wrap">
+    <div class="state-msg">일정을 불러오는 중...</div>
+  </div>
+
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-header">
+      <div class="detail-type" id="d-type"></div>
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="detail-title" id="d-title"></div>
+    <div class="detail-meta" id="d-meta"></div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-note">일정 문의 · <strong>원우회 집행부</strong></div>
+    <div class="footer-note">구독 시 일정 변경사항 자동 반영</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API_KEY = 'AIzaSyCllmHnJx8M-oaKjEzcxriUlNPlDGcQ-FI';
+const CAL_ID = 'kaist.pmba.14@gmail.com';
+const ICAL_URL = 'https://calendar.google.com/calendar/ical/kaist.pmba.14%40gmail.com/public/basic.ics';
+const DOW = ['일','월','화','수','목','금','토'];
+const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+
+const COLOR_MAP = {
+  '11': { color: '#D85A30', bg: '#FAECE7', label: '전체모임 / 총회' },
+  '9':  { color: '#185FA5', bg: '#E6F1FB', label: '학술 세미나' },
+  '2':  { color: '#3B6D11', bg: '#EAF3DE', label: '친목 / MT' },
+  '5':  { color: '#BA7517', bg: '#FAEEDA', label: '마감 / 제출' },
+  '1':  { color: '#534AB7', bg: '#EEEDFE', label: '외부 행사' },
+  'default': { color: '#185FA5', bg: '#E6F1FB', label: '일정' }
+};
+
+let currentDate = new Date();
+let allEvents = [];
+let view = 'month';
+
+function getCI(ev) {
+  return (ev.colorId && COLOR_MAP[ev.colorId]) ? COLOR_MAP[ev.colorId] : COLOR_MAP['default'];
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function formatDateTime(ev) {
+  if (ev.start.date) {
+    const d = new Date(ev.start.date + 'T00:00:00');
+    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${DOW[d.getDay()]}) · 종일`;
+  }
+  const s = new Date(ev.start.dateTime), e = new Date(ev.end.dateTime);
+  return `${s.getMonth()+1}월 ${s.getDate()}일 (${DOW[s.getDay()]}) ${pad(s.getHours())}:${pad(s.getMinutes())} ~ ${pad(e.getHours())}:${pad(e.getMinutes())}`;
+}
+
+function showDetail(id) {
+  const ev = allEvents.find(e => e.id === id);
+  if (!ev) return;
+  const ci = getCI(ev);
+  document.getElementById('d-type').textContent = ci.label;
+  document.getElementById('d-type').style.color = ci.color;
+  document.getElementById('d-title').textContent = ev.summary || '(제목 없음)';
+  let meta = formatDateTime(ev);
+  if (ev.location) meta += '\n📍 ' + ev.location;
+  if (ev.description) meta += '\n' + ev.description.replace(/<[^>]+>/g, '');
+  document.getElementById('d-meta').textContent = meta;
+  const panel = document.getElementById('detail-panel');
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeDetail() { document.getElementById('detail-panel').classList.remove('show'); }
+
+function getEventsForDate(y, m, d) {
+  const ds = `${y}-${pad(m+1)}-${pad(d)}`;
+  return allEvents.filter(ev => {
+    const start = (ev.start.date || ev.start.dateTime || '').slice(0,10);
+    const endRaw = ev.end.date || ev.end.dateTime || '';
+    const end = ev.end.date
+      ? new Date(new Date(endRaw) - 86400000).toISOString().slice(0,10)
+      : endRaw.slice(0,10);
+    return start <= ds && ds <= end;
+  });
+}
+
+function renderMonth() {
+  const y = currentDate.getFullYear(), m = currentDate.getMonth();
+  document.getElementById('month-label').textContent = `${y}년 ${MONTHS[m]}`;
+  const firstDay = new Date(y, m, 1).getDay();
+  const lastDate = new Date(y, m+1, 0).getDate();
+  const prevLast = new Date(y, m, 0).getDate();
+  const today = new Date();
+
+  let html = '<div class="day-headers">' + DOW.map(d => `<div class="day-header">${d}</div>`).join('') + '</div>';
+  html += '<div class="days-grid">';
+
+  let cells = [];
+  for (let i = firstDay - 1; i >= 0; i--) cells.push({ d: prevLast - i, cur: false });
+  for (let d = 1; d <= lastDate; d++) cells.push({ d, cur: true });
+  while (cells.length % 7 !== 0) cells.push({ d: cells.length - firstDay - lastDate + 1, cur: false });
+
+  cells.forEach(({ d, cur }) => {
+    const isToday = cur && d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
+    html += '<div class="day-cell">';
+    html += `<div class="day-num${isToday ? ' today' : ''}${!cur ? ' other' : ''}">${d}</div>`;
+    if (cur) {
+      const evs = getEventsForDate(y, m, d);
+      evs.slice(0, 2).forEach(ev => {
+        const ci = getCI(ev);
+        const t = (ev.summary || '일정').slice(0, 9);
+        html += `<div class="event-chip" style="background:${ci.bg};color:${ci.color}" onclick="showDetail('${ev.id}')">${t}</div>`;
+      });
+      if (evs.length > 2) html += `<div class="more-chip">+${evs.length - 2}개 더</div>`;
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  document.getElementById('cal-wrap').innerHTML = html;
+}
+
+function renderList() {
+  const y = currentDate.getFullYear(), m = currentDate.getMonth();
+  document.getElementById('month-label').textContent = `${y}년 ${MONTHS[m]}`;
+  const ms = `${y}-${pad(m+1)}-01`;
+  const me = `${y}-${pad(m+1)}-${pad(new Date(y,m+1,0).getDate())}`;
+  const evs = allEvents.filter(ev => {
+    const s = (ev.start.date || ev.start.dateTime || '').slice(0,10);
+    return s >= ms && s <= me;
+  });
+
+  if (!evs.length) {
+    document.getElementById('cal-wrap').innerHTML = '<div class="list-view"><div class="state-msg">이번 달 등록된 일정이 없습니다</div></div>';
+    return;
+  }
+
+  let html = '<div class="list-view">';
+  evs.forEach(ev => {
+    const ci = getCI(ev);
+    const startRaw = ev.start.date || ev.start.dateTime;
+    const d = new Date(ev.start.date ? startRaw + 'T00:00:00' : startRaw);
+    const timeStr = ev.start.date ? '종일' : `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    html += `<div class="list-item" onclick="showDetail('${ev.id}')">
+      <div class="list-date"><div class="list-date-day">${d.getDate()}</div><div class="list-date-dow">${DOW[d.getDay()]}</div></div>
+      <div class="list-dot" style="background:${ci.color}"></div>
+      <div class="list-info">
+        <div class="list-title">${ev.summary || '(제목 없음)'}</div>
+        <div class="list-meta">${timeStr}${ev.location ? ' · ' + ev.location : ''}</div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('cal-wrap').innerHTML = html;
+}
+
+function render() { closeDetail(); view === 'month' ? renderMonth() : renderList(); }
+function setView(v) {
+  view = v;
+  document.getElementById('btn-month').classList.toggle('active', v === 'month');
+  document.getElementById('btn-list').classList.toggle('active', v === 'list');
+  render();
+}
+
+document.getElementById('prev-btn').onclick = () => { currentDate.setMonth(currentDate.getMonth()-1); render(); };
+document.getElementById('next-btn').onclick = () => { currentDate.setMonth(currentDate.getMonth()+1); render(); };
+
+document.getElementById('sub-btn').onclick = () => {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(ICAL_URL).then(() => showToast('구독 링크가 복사되었습니다'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = ICAL_URL; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('구독 링크가 복사되었습니다');
+  }
+};
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+async function fetchEvents() {
+  const now = new Date();
+  const tMin = new Date(now.getFullYear(), now.getMonth()-1, 1).toISOString();
+  const tMax = new Date(now.getFullYear(), now.getMonth()+6, 1).toISOString();
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CAL_ID)}/events?key=${API_KEY}&timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime&maxResults=200`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    allEvents = data.items || [];
+    render();
+  } catch(e) {
+    document.getElementById('cal-wrap').innerHTML = `<div class="state-msg">일정을 불러올 수 없습니다<br><small>${e.message}</small></div>`;
+  }
+}
+
+fetchEvents();
+</script>
+</body>
+</html>
