@@ -12,8 +12,8 @@
     --text: #1A1A18; --muted: #6B6B67; --border: #E2E0D8;
     --blue: #185FA5;
   }
-  html { overflow-x: hidden; }
-  body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
+  html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; }
+  body { overflow-x: clip; }
 
   /* STICKY TOP */
   .sticky-top { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 1.5rem 0 0.75rem; margin: -1.5rem 0 0; }
