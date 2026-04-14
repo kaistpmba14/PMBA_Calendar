@@ -15,6 +15,10 @@
   html { overflow-x: hidden; }
   body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
 
+  /* STICKY TOP */
+  .sticky-top { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 1.5rem 0 0.75rem; margin: -1.5rem 0 0; }
+  @media (max-width: 600px) { .sticky-top { position: static; padding: 0; margin: 0; } }
+
   /* PAGE */
   .page { max-width: 1400px; margin: 0 auto; padding: 2rem 2.5rem 4rem; }
 
@@ -121,6 +125,7 @@
 </head>
 <body>
 <div class="page">
+  <div class="sticky-top">
   <div class="header">
     <div class="header-left">
       <div class="school-tag">KAIST College of Business</div>
@@ -160,6 +165,7 @@
     </div>
   </div>
 
+  </div>
   <div class="cal-scroll-wrap">
     <div class="cal-wrap" id="cal-wrap">
       <div class="state-msg">일정을 불러오는 중...</div>
