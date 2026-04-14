@@ -16,8 +16,10 @@
   body { overflow-x: clip; }
 
   /* STICKY TOP */
-  .sticky-top { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 1.5rem 0 0.75rem; margin: -1.5rem 0 0; }
-  @media (max-width: 600px) { .sticky-top { position: static; padding: 0; margin: 0; } }
+  .sticky-top { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 1.5rem 0 0; margin: -1.5rem 0 0; }
+  .day-headers-sticky { display: grid; grid-template-columns: repeat(7, 1fr); background: #F7F6F2; border-bottom: 1px solid var(--border); border-radius: 16px 16px 0 0; border: 1px solid var(--border); border-bottom: none; margin-top: 0; }
+  .day-headers-sticky .day-header { text-align: center; font-size: 11px; color: var(--muted); padding: 8px 0; font-weight: 500; }
+  @media (max-width: 600px) { .sticky-top { position: static; padding: 0; margin: 0; } .day-headers-sticky { display: none; } }
 
   /* PAGE */
   .page { max-width: 1400px; margin: 0 auto; padding: 2rem 2.5rem 4rem; }
@@ -56,6 +58,7 @@
   /* CALENDAR GRID - PC */
   .cal-scroll-wrap { width: 100%; }
   .cal-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; width: 100%; }
+  @media (min-width: 601px) { .cal-wrap { border-radius: 0 0 16px 16px; border-top: none; } }
   .day-headers { display: grid; grid-template-columns: repeat(7, 1fr); background: #F7F6F2; border-bottom: 1px solid var(--border); }
   .day-header { text-align: center; font-size: 11px; color: var(--muted); padding: 8px 0; font-weight: 500; }
   .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: minmax(calc((min(100vw, 1400px) - 5rem) / 7 * 0.9), auto); }
@@ -165,6 +168,7 @@
     </div>
   </div>
 
+  <div class="day-headers-sticky" id="day-headers-sticky"></div>
   </div>
   <div class="cal-scroll-wrap">
     <div class="cal-wrap" id="cal-wrap">
@@ -265,8 +269,12 @@ function renderMonth() {
   const prevLast = new Date(y, m, 0).getDate();
   const today = new Date();
 
-  let html = '<div class="day-headers">' + DOW.map(d => `<div class="day-header">${d}</div>`).join('') + '</div>';
-  html += '<div class="days-grid">';
+  // PC: sticky day-headers 별도 렌더링
+  const stickyHeader = document.getElementById('day-headers-sticky');
+  if (stickyHeader) {
+    stickyHeader.innerHTML = DOW.map(d => `<div class="day-header">${d}</div>`).join('');
+  }
+  let html = '<div class="days-grid">';
 
   let cells = [];
   for (let i = firstDay - 1; i >= 0; i--) cells.push({ d: prevLast - i, cur: false });
