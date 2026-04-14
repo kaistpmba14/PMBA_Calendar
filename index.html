@@ -183,7 +183,7 @@
 const API_KEY = 'AIzaSyCllmHnJx8M-oaKjEzcxriUlNPlDGcQ-FI';
 const CAL_ID = 'kaist.pmba.14@gmail.com';
 const ICAL_URL = 'https://calendar.google.com/calendar/ical/kaist.pmba.14%40gmail.com/public/basic.ics';
-const DOW = ['월','화','수','목','금','토','일'];
+const DOW = ['일','월','화','수','목','금','토'];
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
 // COLOR_MAP: colorId -> { color, bg, label }
@@ -254,8 +254,7 @@ function getEventsForDate(y, m, d) {
 function renderMonth() {
   const y = currentDate.getFullYear(), m = currentDate.getMonth();
   document.getElementById('month-label').textContent = `${y}년 ${MONTHS[m]}`;
-  const rawDay = new Date(y, m, 1).getDay();
-  const firstDay = rawDay === 0 ? 6 : rawDay - 1;
+  const firstDay = new Date(y, m, 1).getDay();
   const lastDate = new Date(y, m+1, 0).getDate();
   const prevLast = new Date(y, m, 0).getDate();
   const today = new Date();
@@ -405,7 +404,7 @@ async function fetchEvents() {
   const now = new Date();
   const tMin = new Date(now.getFullYear(), now.getMonth()-1, 1).toISOString();
   const tMax = new Date(now.getFullYear()+2, 11, 31).toISOString();
-  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CAL_ID)}/events?key=${API_KEY}&timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime&maxResults=200&_=${Date.now()}`;
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CAL_ID)}/events?key=${API_KEY}&timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime&maxResults=2500&_=${Date.now()}`;
   try {
     const res = await fetch(url, { cache: 'no-store' });
     const data = await res.json();
