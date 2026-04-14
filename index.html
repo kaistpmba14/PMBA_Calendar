@@ -405,9 +405,9 @@ async function fetchEvents() {
   const now = new Date();
   const tMin = new Date(now.getFullYear(), now.getMonth()-1, 1).toISOString();
   const tMax = new Date(now.getFullYear(), now.getMonth()+6, 1).toISOString();
-  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CAL_ID)}/events?key=${API_KEY}&timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime&maxResults=200`;
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CAL_ID)}/events?key=${API_KEY}&timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime&maxResults=200&_=${Date.now()}`;
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { cache: 'no-store' });
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
     allEvents = data.items || [];
