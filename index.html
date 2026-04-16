@@ -137,13 +137,13 @@ body { overflow-x: clip; }
   grid-auto-rows: minmax(calc((min(100vw, 1400px) - 5rem) / 7 * 0.9), auto);
 }
 .day-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 6px; overflow: hidden; display: flex; flex-direction: column; }
-.day-events { overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-.day-events::-webkit-scrollbar { width: 3px; }
-.day-events::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.day-cell-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.day-events { flex: 1; overflow: hidden; }
 .day-cell:nth-child(7n) { border-right: none; }
-.day-num { font-size: 11px; color: var(--muted); margin-bottom: 4px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
+.day-num { font-size: 11px; color: var(--muted); width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
 .day-num.today { background: var(--blue); color: #fff; font-weight: 500; }
 .day-num.other { color: #C5C3BB; }
+.more-badge { font-size: 10px; color: var(--muted); background: #EFEFEF; border-radius: 4px; padding: 1px 5px; white-space: nowrap; flex-shrink: 0; line-height: 1.6; }
 
 /* ── EVENT CHIP ── */
 .event-chip {
@@ -204,7 +204,7 @@ body { overflow-x: clip; }
   .day-headers { grid-template-columns: repeat(7, 90px); width: 630px; }
   .days-grid { grid-template-columns: repeat(7, 90px); grid-auto-rows: 80px; }
   .day-cell { padding: 8px 6px; }
-  .day-events { max-height: 58px; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+  .day-events { overflow: hidden; }
   .days-grid { grid-auto-rows: 90px; }
   .event-chip { font-size: 10px; padding: 2px 4px; margin-bottom: 2px; }
   .more-chip { font-size: 9px; }
@@ -221,7 +221,7 @@ body { overflow-x: clip; }
   .title { font-size: 18px; }
   .days-grid { grid-auto-rows: 80px; }
   .day-cell { padding: 8px 6px; }
-  .day-events { max-height: 50px; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+  .day-events { overflow: hidden; }
   .event-chip { font-size: clamp(10px, 1.2vw, 13px); }
 }
 </style>
@@ -383,17 +383,26 @@ function renderMonth() {
   cells.forEach(({ d, cur }) => {
     const isToday = cur && d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
     html += '<div class="day-cell">';
-    html += `<div class="day-num${isToday ? ' today' : ''}${!cur ? ' other' : ''}">${d}</div>`;
     if (cur) {
       const evs = getEventsForDate(y, m, d).filter(isVisible)
         .sort((a, b) => getCI(a).priority - getCI(b).priority);
+      const isMobile = window.innerWidth <= 600;
+      const limit = isMobile ? 2 : 4;
+      const extra = evs.length - limit;
+      html += '<div class="day-cell-header">';
+      html += `<div class="day-num${isToday ? ' today' : ''}">${d}</div>`;
+      if (extra > 0) html += `<div class="more-badge">+${extra}개 더</div>`;
+      html += '</div>';
       html += '<div class="day-events">';
-      evs.forEach(ev => {
+      evs.slice(0, limit).forEach(ev => {
         const ci = getCI(ev);
         const t = ev.summary || '일정';
         html += `<div class="event-chip" style="background:${ci.bg};color:${ci.color}" onclick="showDetail('${ev.id}')">${t}</div>`;
       });
       html += '</div>';
+    } else {
+      html += `<div class="day-cell-header"><div class="day-num other">${d}</div></div>`;
+      html += '<div class="day-events"></div>';
     }
     html += '</div>';
   });
