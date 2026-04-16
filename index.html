@@ -143,7 +143,8 @@ body { overflow-x: clip; }
 .day-num { font-size: 11px; color: var(--muted); width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
 .day-num.today { background: var(--blue); color: #fff; font-weight: 500; }
 .day-num.other { color: #C5C3BB; }
-.more-badge { font-size: 10px; color: var(--muted); background: #EFEFEF; border-radius: 4px; padding: 1px 5px; white-space: nowrap; flex-shrink: 0; line-height: 1.6; }
+.more-badge { font-size: 10px; color: var(--muted); background: #EFEFEF; border-radius: 4px; padding: 1px 5px; white-space: nowrap; flex-shrink: 0; line-height: 1.6; cursor: pointer; }
+.more-badge:hover { background: var(--border); }
 
 /* ── EVENT CHIP ── */
 .event-chip {
@@ -391,7 +392,7 @@ function renderMonth() {
       const extra = evs.length - limit;
       html += '<div class="day-cell-header">';
       html += `<div class="day-num${isToday ? ' today' : ''}">${d}</div>`;
-      if (extra > 0) html += `<div class="more-badge">+${extra}개 더</div>`;
+      if (extra > 0) html += `<div class="more-badge" onclick="setView('list')" style="cursor:pointer">+${extra}개 더</div>`;
       html += '</div>';
       html += '<div class="day-events">';
       evs.slice(0, limit).forEach(ev => {
@@ -418,6 +419,11 @@ function renderList() {
   const evs = allEvents.filter(ev => {
     const s = (ev.start.date || ev.start.dateTime || '').slice(0,10);
     return s >= ms && s <= me && isVisible(ev);
+  }).sort((a, b) => {
+    const dateA = (a.start.date || a.start.dateTime || '').slice(0,10);
+    const dateB = (b.start.date || b.start.dateTime || '').slice(0,10);
+    if (dateA !== dateB) return dateA < dateB ? -1 : 1;
+    return getCI(a).priority - getCI(b).priority;
   });
 
   if (!evs.length) {
