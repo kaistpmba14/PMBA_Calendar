@@ -6,267 +6,272 @@
 <title>KAIST PMBA 14기 캘린더</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #F7F6F2; --surface: #FFFFFF;
-    --text: #1A1A18; --muted: #6B6B67; --border: #E2E0D8;
-    --blue: #185FA5;
-  }
+:root {
+  --bg: #F7F6F2; --surface: #FFFFFF;
+  --text: #1A1A18; --muted: #6B6B67; --border: #E2E0D8;
+  --blue: #185FA5;
+}
 
-  html, body {
-    min-height: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-  }
-  body { overflow-x: clip; }
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+body { overflow-x: clip; }
 
-  /* ── PAGE ── */
-  .page { max-width: 1400px; margin: 0 auto; padding: 2rem 2.5rem 4rem; }
+/* ── PAGE ── */
+.page { max-width: 1400px; margin: 0 auto; padding: 2rem 2.5rem 4rem; }
 
-  /* ── STICKY TOP (PC only) ── */
-  .sticky-top {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--bg);
-    padding: 1.5rem 0 0;
-    margin-top: -1.5rem;
-  }
+/* ── STICKY TOP (PC only) ── */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  padding: 1.5rem 0 0;
+  margin-top: -1.5rem;
+}
 
-  /* ── HEADER ── */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
-  .last-updated { font-size: 11px; color: var(--muted); font-weight: 300; white-space: nowrap; }
-  .school-tag { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-  .title { font-size: 22px; font-weight: 700; line-height: 1.2; }
-  .title span { color: var(--blue); }
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.header-right { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
+.last-updated { font-size: 11px; color: var(--muted); font-weight: 300; white-space: nowrap; }
+.school-tag { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.title { font-size: 22px; font-weight: 700; line-height: 1.2; }
+.title span { color: var(--blue); }
 
-  /* ── SUBSCRIBE BTN ── */
-  .subscribe-btn {
-    display: inline-flex; align-items: center; align-self: center; gap: 6px;
-    background: #1A1A18; color: #fff;
-    font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 400;
-    padding: 0 12px 0 8px; border-radius: 100px; border: none;
-    cursor: pointer; white-space: nowrap; height: 32px;
-    transition: opacity 0.15s;
-  }
-  .subscribe-btn:hover { opacity: 0.78; }
+/* ── SUBSCRIBE BTN ── */
+.subscribe-btn {
+  display: inline-flex; align-items: center; align-self: center; gap: 6px;
+  background: #1A1A18; color: #fff;
+  font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 400;
+  padding: 0 12px 0 8px; border-radius: 100px; border: none;
+  cursor: pointer; white-space: nowrap; height: 32px;
+  transition: opacity 0.15s;
+}
+.subscribe-btn:hover { opacity: 0.78; }
 
-  /* ── LEGEND ── */
-  .legend-wrap { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-bottom: 0.75rem; }
-  .legend { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
-  .legend-item {
-    display: flex; align-items: center; gap: 6px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 100px; padding: 0 12px 0 8px;
-    font-size: 12px; color: var(--muted);
-    cursor: pointer; user-select: none;
-    height: 32px; white-space: nowrap;
-    transition: opacity 0.15s;
-  }
-  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .legend-item.inactive { opacity: 0.3; }
-  .filter-reset {
-    display: none; align-items: center;
-    font-size: 12px; color: var(--muted);
-    background: none; border: 1px solid var(--border);
-    border-radius: 100px; padding: 0 12px;
-    height: 32px; cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif; white-space: nowrap;
-  }
-  .filter-reset.show { display: flex; }
-  .filter-reset:hover { background: var(--border); }
+/* ── LEGEND ── */
+.legend-wrap { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-bottom: 0.75rem; }
+.legend { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 100px; padding: 0 12px 0 8px;
+  font-size: 12px; color: var(--muted);
+  cursor: pointer; user-select: none;
+  height: 32px; white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.legend-item.inactive { opacity: 0.3; }
+.filter-reset {
+  display: none; align-items: center;
+  font-size: 12px; color: var(--muted);
+  background: none; border: 1px solid var(--border);
+  border-radius: 100px; padding: 0 12px;
+  height: 32px; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif; white-space: nowrap;
+}
+.filter-reset.show { display: flex; }
+.filter-reset:hover { background: var(--border); }
 
-  /* ── CAL NAV ── */
-  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0; padding-bottom: 0.75rem; }
-  .nav-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 16px; cursor: pointer; color: var(--text); }
-  .nav-btn:hover { background: var(--border); }
-  .month-label { font-size: 17px; font-weight: 500; }
-  .view-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-size: 12px; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; color: var(--muted); }
-  .view-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+/* ── CAL NAV ── */
+.cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0; padding-bottom: 0.75rem; }
+.nav-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 16px; cursor: pointer; color: var(--text); }
+.nav-btn:hover { background: var(--border); }
+.month-label { font-size: 17px; font-weight: 500; }
+.view-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-size: 12px; font-family: 'Noto Sans KR', sans-serif; cursor: pointer; color: var(--muted); }
+.view-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
 
-  /* ── DAY HEADERS STICKY (PC) ── */
-  .day-headers-sticky {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background: #F7F6F2;
-    border: 1px solid var(--border);
-    border-bottom: none;
-    border-radius: 16px 16px 0 0;
-  }
-  .day-headers-sticky .day-header {
-    text-align: center; font-size: 11px;
-    color: var(--muted); padding: 8px 0; font-weight: 500;
-  }
+/* ── DAY HEADERS STICKY (PC) ── */
+.day-headers-sticky {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #F7F6F2;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+}
+.day-headers-sticky .day-header {
+  text-align: center; font-size: 11px;
+  color: var(--muted); padding: 8px 0; font-weight: 500;
+}
 
-  /* ── CAL SCROLL WRAP ── */
-  .cal-scroll-wrap { width: 100%; }
+/* ── CAL SCROLL WRAP ── */
+.cal-scroll-wrap { width: 100%; }
 
-  /* ── CAL WRAP (PC: 상단 radius 없음, sticky headers와 이어짐) ── */
-  .cal-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 16px 16px;
-    overflow: hidden;
-    width: 100%;
-  }
+/* ── CAL WRAP (PC: 상단 radius 없음, sticky headers와 이어짐) ── */
+.cal-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
+  width: 100%;
+}
 
-  /* ── DAY HEADERS (모바일 전용, PC에서는 숨김) ── */
-  .day-headers {
-    display: none;
-    grid-template-columns: repeat(7, 1fr);
-    background: #F7F6F2;
-    border-bottom: 1px solid var(--border);
-  }
-  .day-header { text-align: center; font-size: 11px; color: var(--muted); padding: 8px 0; font-weight: 500; }
+/* ── DAY HEADERS (모바일 전용, PC에서는 숨김) ── */
+.day-headers {
+  display: none;
+  grid-template-columns: repeat(7, 1fr);
+  background: #F7F6F2;
+  border-bottom: 1px solid var(--border);
+}
+.day-header { text-align: center; font-size: 11px; color: var(--muted); padding: 8px 0; font-weight: 500; }
 
-  /* ── DAYS GRID ── */
-  .days-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: minmax(calc((min(100vw, 1400px) - 5rem) / 7 * 0.9), auto);
-  }
-  .day-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 6px; overflow: hidden; display: flex; flex-direction: column; }
-  .day-events { overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-  .day-events::-webkit-scrollbar { width: 3px; }
-  .day-events::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  .day-cell:nth-child(7n) { border-right: none; }
-  .day-num { font-size: 11px; color: var(--muted); margin-bottom: 4px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
-  .day-num.today { background: var(--blue); color: #fff; font-weight: 500; }
-  .day-num.other { color: #C5C3BB; }
+/* ── DAYS GRID ── */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(calc((min(100vw, 1400px) - 5rem) / 7 * 0.9), auto);
+}
+.day-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 6px; overflow: hidden; display: flex; flex-direction: column; }
+.day-events { overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.day-events::-webkit-scrollbar { width: 3px; }
+.day-events::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.day-cell:nth-child(7n) { border-right: none; }
+.day-num { font-size: 11px; color: var(--muted); margin-bottom: 4px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
+.day-num.today { background: var(--blue); color: #fff; font-weight: 500; }
+.day-num.other { color: #C5C3BB; }
 
-  /* ── EVENT CHIP ── */
-  .event-chip {
-    font-size: clamp(11px, 1.1vw, 15px);
-    padding: 3px 6px;
-    border-radius: 4px;
-    margin-bottom: 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
-    line-height: 1.4;
-    display: block;
-  }
-  .event-chip:hover { opacity: 0.75; }
-  .more-chip { font-size: 10px; color: var(--muted); padding: 1px 4px; cursor: pointer; }
+/* ── EVENT CHIP ── */
+.event-chip {
+  font-size: clamp(11px, 1.1vw, 15px);
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  line-height: 1.4;
+  display: block;
+}
+.event-chip:hover { opacity: 0.75; }
+.more-chip { font-size: 10px; color: var(--muted); padding: 1px 4px; cursor: pointer; }
 
-  /* ── LIST VIEW ── */
-  .list-view { padding: 1rem; }
-  .list-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
-  .list-item:last-child { border-bottom: none; }
-  .list-item:hover { opacity: 0.75; }
-  .list-date { flex-shrink: 0; width: 36px; text-align: center; }
-  .list-date-day { font-size: 18px; font-weight: 700; line-height: 1; }
-  .list-date-dow { font-size: 10px; color: var(--muted); margin-top: 2px; }
-  .list-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-  .list-info { flex: 1; min-width: 0; }
-  .list-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .list-meta { font-size: 12px; color: var(--muted); }
+/* ── LIST VIEW ── */
+.list-view { padding: 1rem; }
+.list-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+.list-item:last-child { border-bottom: none; }
+.list-item:hover { opacity: 0.75; }
+.list-date { flex-shrink: 0; width: 36px; text-align: center; }
+.list-date-day { font-size: 18px; font-weight: 700; line-height: 1; }
+.list-date-dow { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.list-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.list-info { flex: 1; min-width: 0; }
+.list-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-meta { font-size: 12px; color: var(--muted); }
 
-  /* ── DETAIL PANEL ── */
-  .detail-panel { margin-top: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; display: none; }
-  .detail-panel.show { display: block; }
-  .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-  .detail-type { font-size: 11px; font-weight: 500; }
-  .detail-close { background: none; border: none; font-size: 16px; cursor: pointer; color: var(--muted); }
-  .detail-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
-  .detail-meta { font-size: 13px; color: var(--muted); line-height: 1.8; white-space: pre-line; }
+/* ── DETAIL PANEL ── */
+.detail-panel { margin-top: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; display: none; }
+.detail-panel.show { display: block; }
+.detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.detail-type { font-size: 11px; font-weight: 500; }
+.detail-close { background: none; border: none; font-size: 16px; cursor: pointer; color: var(--muted); }
+.detail-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+.detail-meta { font-size: 13px; color: var(--muted); line-height: 1.8; white-space: pre-line; }
 
-  /* ── STATE / TOAST ── */
-  .state-msg { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
-  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text); color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 100px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; font-family: 'Noto Sans KR', sans-serif; z-index: 999; }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* ── STATE / TOAST ── */
+.state-msg { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
+.toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text); color: #fff; font-size: 13px; padding: 10px 20px; border-radius: 100px; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; font-family: 'Noto Sans KR', sans-serif; z-index: 999; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* ── MOBILE 세로 (≤600px portrait) ── */
-  @media (max-width: 600px) and (orientation: portrait) {
-    .page { padding: 1.25rem 1rem 3rem; }
-    .sticky-top { position: static; padding: 0; margin: 0; }
-    .day-headers-sticky { display: none; }
-    .day-headers { display: grid; }
-    .cal-wrap { border-top: 1px solid var(--border); border-radius: 16px; }
-    .header { flex-direction: column; align-items: flex-start; }
-    .header-right { justify-content: flex-start; flex-wrap: wrap; }
-    .title { font-size: 19px; }
-    .cal-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-left: -1rem; margin-right: -1rem; padding: 0 1rem; border-radius: 16px; }
-    .cal-wrap { width: 630px; min-width: 630px; }
-    .day-headers { grid-template-columns: repeat(7, 90px); width: 630px; }
-    .days-grid { grid-template-columns: repeat(7, 90px); grid-auto-rows: 80px; }
-    .day-cell { padding: 4px 3px; height: 90px; }
-    .day-events { max-height: 62px; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
-    .event-chip { font-size: 10px; padding: 2px 4px; margin-bottom: 2px; }
-    .more-chip { font-size: 9px; }
-  }
+/* ── MOBILE 세로 (≤600px portrait) ── */
+@media (max-width: 600px) and (orientation: portrait) {
+  .page { padding: 1.25rem 1rem 3rem; }
+  .sticky-top { position: static; padding: 0; margin: 0; }
+  .day-headers-sticky { display: none; }
+  .day-headers { display: grid; }
+  .cal-wrap { border-top: 1px solid var(--border); border-radius: 16px; }
+  .day-headers { border-top: none; }
+  .header { flex-direction: column; align-items: flex-start; }
+  .header-right { justify-content: flex-start; flex-wrap: wrap; }
+  .title { font-size: 19px; }
+  .cal-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-left: -1rem; margin-right: -1rem; padding: 0 1rem; border-radius: 16px; }
+  .cal-wrap { width: 630px; min-width: 630px; }
+  .day-headers { grid-template-columns: repeat(7, 90px); width: 630px; }
+  .days-grid { grid-template-columns: repeat(7, 90px); grid-auto-rows: 80px; }
+  .day-cell { padding: 8px 6px; }
+  .day-events { max-height: 58px; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+  .days-grid { grid-auto-rows: 90px; }
+  .event-chip { font-size: 10px; padding: 2px 4px; margin-bottom: 2px; }
+  .more-chip { font-size: 9px; }
+}
 
-  /* ── MOBILE 가로 (≤900px landscape) ── */
-  @media (max-width: 900px) and (orientation: landscape) {
-    .page { padding: 1rem 1.5rem 2rem; }
-    .sticky-top { position: static; padding: 0; margin: 0; }
-    .day-headers-sticky { display: none; }
-    .day-headers { display: grid; }
-    .cal-wrap { border-top: 1px solid var(--border); border-radius: 16px; }
-    .title { font-size: 18px; }
-    .days-grid { grid-auto-rows: 80px; }
-    .day-cell { height: 80px; }
-    .day-events { max-height: 52px; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
-    .event-chip { font-size: clamp(10px, 1.2vw, 13px); }
-  }
+/* ── MOBILE 가로 (≤900px landscape) ── */
+@media (max-width: 900px) and (orientation: landscape) {
+  .page { padding: 1rem 1.5rem 2rem; }
+  .sticky-top { position: static; padding: 0; margin: 0; }
+  .day-headers-sticky { display: none; }
+  .day-headers { display: grid; }
+  .cal-wrap { border-top: 1px solid var(--border); border-radius: 16px; }
+  .day-headers { border-top: none; }
+  .title { font-size: 18px; }
+  .days-grid { grid-auto-rows: 80px; }
+  .day-cell { padding: 8px 6px; }
+  .day-events { max-height: 50px; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+  .event-chip { font-size: clamp(10px, 1.2vw, 13px); }
+}
 </style>
+
 </head>
 <body>
 <div class="page">
   <div class="sticky-top">
-  <div class="header">
-    <div class="header-left">
-      <div class="school-tag">KAIST College of Business</div>
-      <div class="title">PMBA <span>14기</span> 캘린더</div>
-    </div>
-    <div class="header-right">
-      <div class="last-updated" id="last-updated"></div>
-    </div>
-  </div>
-
-  <div class="legend-wrap">
-    <div class="legend legend-filters" id="legend-filters">
-      <div class="legend-item" data-tag="[연합]"><div class="legend-dot" style="background:#7A3F9D"></div>연합모임</div>
-      <div class="legend-item" data-tag="[기수]"><div class="legend-dot" style="background:#C0392B"></div>기수모임</div>
-      <div class="legend-item" data-tag="[소모임]"><div class="legend-dot" style="background:#BA7517"></div>소모임</div>
-      <div class="legend-item" data-tag="[세미나]"><div class="legend-dot" style="background:#2D6A2D"></div>세미나</div>
-      <div class="legend-item" data-tag="[총학]"><div class="legend-dot" style="background:#4A4A4A"></div>총학생회</div>
-      <div class="legend-item" data-tag="[학사]"><div class="legend-dot" style="background:#534AB7"></div>학사일정</div>
-      <div class="legend-item" data-tag="[기타]"><div class="legend-dot" style="background:#5F5E5A"></div>기타</div>
-    </div>
-    <button class="filter-reset" id="filter-reset" onclick="resetFilter()">전체 보기</button>
-    <button class="subscribe-btn" id="sub-btn">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="2" stroke="white" stroke-width="1.2"/><path d="M1 5h12" stroke="white" stroke-width="1.2"/><path d="M4 1v2M10 1v2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
-      내 캘린더에 구독
-    </button>
-  </div>
-
-  <div class="cal-nav">
-    <button class="nav-btn" id="prev-btn">&#8249;</button>
-    <span class="month-label" id="month-label"></span>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div style="display:flex;gap:4px;">
-        <button class="view-btn active" id="btn-month" onclick="setView('month')">월</button>
-        <button class="view-btn" id="btn-list" onclick="setView('list')">목록</button>
+    <div class="header">
+      <div class="header-left">
+        <div class="school-tag">KAIST College of Business</div>
+        <div class="title">PMBA <span>14기</span> 캘린더</div>
       </div>
-      <button class="nav-btn" id="next-btn">&#8250;</button>
+      <div class="header-right">
+        <div class="last-updated" id="last-updated"></div>
+      </div>
     </div>
+
+    <div class="legend-wrap">
+      <div class="legend legend-filters" id="legend-filters">
+        <div class="legend-item" data-tag="[연합]"><div class="legend-dot" style="background:#7A3F9D"></div>연합모임</div>
+        <div class="legend-item" data-tag="[기수]"><div class="legend-dot" style="background:#C0392B"></div>기수모임</div>
+        <div class="legend-item" data-tag="[소모임]"><div class="legend-dot" style="background:#BA7517"></div>소모임</div>
+        <div class="legend-item" data-tag="[세미나]"><div class="legend-dot" style="background:#2D6A2D"></div>세미나</div>
+        <div class="legend-item" data-tag="[총학]"><div class="legend-dot" style="background:#4A4A4A"></div>총학생회</div>
+        <div class="legend-item" data-tag="[학사]"><div class="legend-dot" style="background:#534AB7"></div>학사일정</div>
+        <div class="legend-item" data-tag="[기타]"><div class="legend-dot" style="background:#5F5E5A"></div>기타</div>
+      </div>
+      <button class="filter-reset" id="filter-reset" onclick="resetFilter()">전체 보기</button>
+      <button class="subscribe-btn" id="sub-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="2" stroke="white" stroke-width="1.2"/><path d="M1 5h12" stroke="white" stroke-width="1.2"/><path d="M4 1v2M10 1v2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+        내 캘린더에 구독
+      </button>
+    </div>
+
+    <div class="cal-nav">
+      <button class="nav-btn" id="prev-btn">&#8249;</button>
+      <span class="month-label" id="month-label"></span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="display:flex;gap:4px;">
+          <button class="view-btn active" id="btn-month" onclick="setView('month')">월</button>
+          <button class="view-btn" id="btn-list" onclick="setView('list')">목록</button>
+        </div>
+        <button class="nav-btn" id="next-btn">&#8250;</button>
+      </div>
+    </div>
+
+    <div class="day-headers-sticky" id="day-headers-sticky"></div>
   </div>
 
-  <div class="day-headers-sticky" id="day-headers-sticky"></div>
-  </div>
   <div class="cal-scroll-wrap">
     <div class="cal-wrap" id="cal-wrap">
       <div class="state-msg">일정을 불러오는 중...</div>
@@ -282,7 +287,6 @@
     <div class="detail-meta" id="d-meta"></div>
   </div>
 
-
 </div>
 <div class="toast" id="toast"></div>
 
@@ -293,16 +297,14 @@ const ICAL_URL = 'https://calendar.google.com/calendar/ical/kaist.pmba.14%40gmai
 const DOW = ['일','월','화','수','목','금','토'];
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
-// COLOR_MAP: colorId -> { color, bg, label }
-// 구글 캘린더 colorId 확정 후 업데이트 예정
 const TAG_MAP = [
-  { tag: '[연합]',   color: '#7A3F9D', bg: '#F3E8FB', label: '연합모임' },
-  { tag: '[기수]',   color: '#C0392B', bg: '#FDECEA', label: '기수모임' },
-  { tag: '[소모임]', color: '#BA7517', bg: '#FAEEDA', label: '소모임' },
-  { tag: '[세미나]', color: '#2D6A2D', bg: '#E6F4E6', label: '세미나' },
-  { tag: '[총학]',   color: '#4A4A4A', bg: '#EFEFEF', label: '총학생회' },
-  { tag: '[학사]',   color: '#534AB7', bg: '#EEEDFE', label: '학사일정' },
-  { tag: '[기타]',   color: '#5F5E5A', bg: '#E8E7E3', label: '기타' },
+  { tag: '[학사]',   color: '#534AB7', bg: '#EEEDFE', label: '학사일정',  priority: 0 },
+  { tag: '[기수]',   color: '#C0392B', bg: '#FDECEA', label: '기수모임',  priority: 1 },
+  { tag: '[연합]',   color: '#7A3F9D', bg: '#F3E8FB', label: '연합모임',  priority: 2 },
+  { tag: '[세미나]', color: '#2D6A2D', bg: '#E6F4E6', label: '세미나',    priority: 3 },
+  { tag: '[소모임]', color: '#BA7517', bg: '#FAEEDA', label: '소모임',    priority: 4 },
+  { tag: '[총학]',   color: '#4A4A4A', bg: '#EFEFEF', label: '총학생회',  priority: 5 },
+  { tag: '[기타]',   color: '#5F5E5A', bg: '#E8E7E3', label: '기타',      priority: 6 },
 ];
 const DEFAULT_CI = { color: '#888', bg: '#F5F5F5', label: '일정' };
 
@@ -313,15 +315,15 @@ let view = 'month';
 function getCI(ev) {
   const title = ev.summary || '';
   const match = TAG_MAP.find(t => title.startsWith(t.tag));
-  return match || DEFAULT_CI;
+  return match || { ...DEFAULT_CI, priority: 99 };
 }
 function pad(n) { return String(n).padStart(2, '0'); }
 
 function formatDateTime(ev) {
   if (ev.start.date) {
     const d = new Date(ev.start.date + 'T00:00:00');
-    const dowFull2 = ['일','월','화','수','목','금','토'];
-    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${dowFull2[d.getDay()]}) · 종일`;
+    const DAYS2 = ['일','월','화','수','목','금','토'];
+    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${DAYS2[d.getDay()]}) · 종일`;
   }
   const s = new Date(ev.start.dateTime), e = new Date(ev.end.dateTime);
   const DAYS = ['일','월','화','수','목','금','토'];
@@ -366,12 +368,10 @@ function renderMonth() {
   const prevLast = new Date(y, m, 0).getDate();
   const today = new Date();
 
-  // PC: sticky day-headers 별도 렌더링
   const stickyHeader = document.getElementById('day-headers-sticky');
   if (stickyHeader) {
     stickyHeader.innerHTML = DOW.map(d => `<div class="day-header">${d}</div>`).join('');
   }
-  // 모바일: cal-wrap 안에 day-headers 포함
   let html = '<div class="day-headers mobile-only">' + DOW.map(d => `<div class="day-header">${d}</div>`).join('') + '</div>';
   html += '<div class="days-grid">';
 
@@ -385,7 +385,8 @@ function renderMonth() {
     html += '<div class="day-cell">';
     html += `<div class="day-num${isToday ? ' today' : ''}${!cur ? ' other' : ''}">${d}</div>`;
     if (cur) {
-      const evs = getEventsForDate(y, m, d).filter(isVisible);
+      const evs = getEventsForDate(y, m, d).filter(isVisible)
+        .sort((a, b) => getCI(a).priority - getCI(b).priority);
       html += '<div class="day-events">';
       evs.forEach(ev => {
         const ci = getCI(ev);
@@ -420,11 +421,10 @@ function renderList() {
     const ci = getCI(ev);
     const startRaw = ev.start.date || ev.start.dateTime;
     const d = new Date(ev.start.date ? startRaw + 'T00:00:00' : startRaw);
-    const dowFull3 = ['일','월','화','수','목','금','토'];
     const LDAYS = ['일','월','화','수','목','금','토'];
     const timeStr = ev.start.date ? '종일' : `${pad(d.getHours())}:${pad(d.getMinutes())}`;
     html += `<div class="list-item" onclick="showDetail('${ev.id}')">
-      <div class="list-date"><div class="list-date-day">${d.getDate()}</div><div class="list-date-dow">${dowFull3[d.getDay()]}</div></div>
+      <div class="list-date"><div class="list-date-day">${d.getDate()}</div><div class="list-date-dow">${LDAYS[d.getDay()]}</div></div>
       <div class="list-dot" style="background:${ci.color}"></div>
       <div class="list-info">
         <div class="list-title">${ev.summary || '(제목 없음)'}</div>
@@ -463,8 +463,7 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// 필터 상태
-let activeTags = new Set(); // 비어있으면 전체 표시
+let activeTags = new Set();
 
 function initFilter() {
   document.querySelectorAll('#legend-filters .legend-item').forEach(el => {
@@ -473,13 +472,11 @@ function initFilter() {
       if (activeTags.has(tag)) {
         activeTags.delete(tag);
         el.classList.remove('inactive');
-        // 모두 해제되면 전체 보기로
         if (activeTags.size === 0) {
           document.querySelectorAll('#legend-filters .legend-item').forEach(e => e.classList.remove('inactive'));
         }
       } else {
         activeTags.add(tag);
-        // 활성화된 것만 밝게, 나머지 흐리게
         document.querySelectorAll('#legend-filters .legend-item').forEach(e => {
           e.classList.toggle('inactive', !activeTags.has(e.dataset.tag));
         });
@@ -524,8 +521,6 @@ async function fetchEvents() {
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
     allEvents = data.items || [];
-    // data.updated = 캘린더 전체의 마지막 수정 시간
-    // 없으면 이벤트 중 가장 최근 updated로 fallback
     const calUpdated = data.updated || (allEvents.length
       ? allEvents.reduce((a, b) => (a.updated > b.updated ? a : b)).updated
       : null);
@@ -539,5 +534,6 @@ async function fetchEvents() {
 initFilter();
 fetchEvents();
 </script>
+
 </body>
 </html>
