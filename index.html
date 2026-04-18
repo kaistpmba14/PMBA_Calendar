@@ -306,7 +306,7 @@ body { overflow-x: clip; }
   .cal-wrap { border-top: 1px solid var(--border); border-radius: 16px; }
   .day-headers { border-top: none; }
   .title { font-size: 18px; }
-  .days-grid { grid-auto-rows: 80px; }
+  .days-grid { grid-auto-rows: 115px; }
   .day-cell { padding: 8px 6px; }
   .day-events { overflow: hidden; }
   .event-chip { font-size: clamp(10px, 1.2vw, 13px); }
@@ -484,7 +484,7 @@ function renderMonth() {
     if (cur) {
       const evs = getEventsForDate(y, m, d).filter(isVisible)
         .sort((a, b) => getCI(a).priority - getCI(b).priority);
-      const isMobile = window.innerWidth <= 600;
+      const isMobile = window.innerWidth <= 900;
       const limit = isMobile ? 3 : 4;
       const extra = evs.length - limit;
       html += '<div class="day-cell-header">';
