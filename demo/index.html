@@ -199,10 +199,10 @@ body { overflow-x: clip; }
   display: none;
   position: absolute;
   top: 0;
-  right: 0;
-  width: 30px;
+  right: -1rem;
+  width: 48px;
   height: 100%;
-  background: linear-gradient(to right, transparent, var(--bg));
+  background: linear-gradient(to right, rgba(247, 246, 242, 0), rgba(247, 246, 242, 0.85) 60%, rgba(247, 246, 242, 0.95));
   pointer-events: none;
   z-index: 5;
 }
@@ -419,7 +419,7 @@ function renderMonth() {
       const evs = getEventsForDate(y, m, d).filter(isVisible)
         .sort((a, b) => getCI(a).priority - getCI(b).priority);
       const isMobile = window.innerWidth <= 600;
-      const limit = isMobile ? 2 : 4;
+      const limit = isMobile ? 3 : 4;
       const extra = evs.length - limit;
       html += '<div class="day-cell-header">';
       html += `<div class="day-num${isToday ? ' today' : ''}${dowCls}">${d}</div>`;
