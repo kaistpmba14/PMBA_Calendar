@@ -234,7 +234,14 @@ body { overflow-x: clip; }
   background: linear-gradient(to right, rgba(247, 246, 242, 0), rgba(247, 246, 242, 0.85) 60%, rgba(247, 246, 242, 0.95));
   pointer-events: none;
   z-index: 5;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
+.scroll-fade-right.hidden { opacity: 0; }
+.scroll-fade-right svg { width: 12px; height: 12px; color: var(--muted); opacity: 0.7; }
 
 
 #month-picker-overlay {
@@ -267,7 +274,7 @@ body { overflow-x: clip; }
 
 /* ── MOBILE 세로 (≤600px portrait) ── */
 @media (max-width: 600px) and (orientation: portrait) {
-  .scroll-fade-right { display: block; }
+  .scroll-fade-right { display: flex; }
   .page { padding: 1.25rem 1rem 3rem; }
   .sticky-top { position: static; padding: 0; margin: 0; }
   .day-headers-sticky { display: none; }
@@ -363,7 +370,7 @@ body { overflow-x: clip; }
       <div class="state-msg">일정을 불러오는 중...</div>
       </div>
     </div>
-    <div class="scroll-fade-right"></div>
+    <div class="scroll-fade-right" id="scroll-fade"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
   </div>
 
   <div class="detail-panel" id="detail-panel">
@@ -619,7 +626,18 @@ document.addEventListener('click', (e) => {
   }
 });
 
-function render() { closeDetail(); view === 'month' ? renderMonth() : renderList(); }
+function render() {
+  closeDetail();
+  view === 'month' ? renderMonth() : renderList();
+  // 렌더링 후 scroll fade 상태 갱신
+  const fade = document.getElementById('scroll-fade');
+  if (fade) {
+    const scrollWrap = document.querySelector('.cal-scroll-wrap');
+    if (scrollWrap) {
+      setTimeout(() => scrollWrap.dispatchEvent(new Event('scroll')), 50);
+    }
+  }
+}
 function setView(v) {
   view = v;
   try { localStorage.setItem('pmba14_view', v); } catch(e) {}
@@ -649,6 +667,37 @@ function showToast(msg) {
 }
 
 let activeTags = new Set();
+
+function initScrollFade() {
+  const scrollWrap = document.querySelector('.cal-scroll-wrap');
+  const fade = document.getElementById('scroll-fade');
+  if (!scrollWrap || !fade) return;
+  
+  const updateFade = () => {
+    // PC에서는 fade 표시 자체를 CSS로 막고 있으니 JS에서도 체크
+    const isMobilePortrait = window.matchMedia('(max-width: 600px) and (orientation: portrait)').matches;
+    if (!isMobilePortrait) {
+      fade.classList.add('hidden');
+      return;
+    }
+    const maxScroll = scrollWrap.scrollWidth - scrollWrap.clientWidth;
+    const atEnd = scrollWrap.scrollLeft >= maxScroll - 5;
+    // 스크롤 영역 자체가 없거나 끝에 도달한 경우 숨김
+    if (maxScroll <= 0 || atEnd) {
+      fade.classList.add('hidden');
+    } else {
+      fade.classList.remove('hidden');
+    }
+  };
+  
+  // 스크롤/리사이즈 시 상태 갱신 (passive로 성능 최적화)
+  scrollWrap.addEventListener('scroll', updateFade, { passive: true });
+  window.addEventListener('resize', updateFade);
+  // 최초 및 렌더링 후 상태 체크
+  updateFade();
+  // 렌더링 후 scrollWidth가 갱신되므로 약간의 딜레이 후 재체크
+  setTimeout(updateFade, 100);
+}
 
 function initFilter() {
   document.querySelectorAll('#legend-filters .legend-item').forEach(el => {
@@ -722,6 +771,7 @@ async function fetchEvents() {
 }
 
 initFilter();
+initScrollFade();
 // 저장된 뷰 선호도에 따라 초기 active 상태 설정
 document.getElementById('btn-month').classList.toggle('active', view === 'month');
 document.getElementById('btn-list').classList.toggle('active', view === 'list');
